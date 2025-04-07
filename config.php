@@ -10,5 +10,5 @@ $config = [
     "log_level" => LOG_DEBUG,
     "tcp_port" => 1080,
     "udp_port" => 0,
-    "wanIP" => '192.168.1.1',
+    "wanIP" => '0.0.0.0',
 ];
