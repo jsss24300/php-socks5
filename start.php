@@ -59,8 +59,53 @@ if (count($config['auth']) == 0) {
     $config['auth'] = [METHOD_NO_AUTH => true];
 }
 
+
+function ipInSubnet($ip, $subnet) {
+    list($subnetIp, $subnetMask) = explode('/', $subnet);
+    
+    // 将 IP 和子网地址转换为长整型
+    $ipLong = ip2long($ip);
+    $subnetLong = ip2long($subnetIp);
+    
+    // 计算子网掩码
+    $maskLong = -1 << (32 - $subnetMask);
+    
+    // 计算网络地址
+    $network = $subnetLong & $maskLong;
+
+    // 判断 IP 是否在子网范围内
+    return ($ipLong & $maskLong) === $network;
+}
+
+function ipInMultipleSubnets($ip, $subnets) {
+    foreach ($subnets as $subnet) {
+        if (ipInSubnet($ip, $subnet)) {
+            return true; // 如果在任意一个子网中，返回 true
+        }
+    }
+    return false; // 如果不在任何子网中，返回 false
+}
+
+
 $worker = new Worker('tcp://0.0.0.0:' . $config['tcp_port']);
 $worker->onConnect = function ($connection) {
+    $subnet_ranges = [
+        '146.70.113.0/24',
+        '146.70.46.0/24',
+        '185.80.221.0/24',
+        '107.181.177.0/24',
+        '2.58.194.0/24',
+        '92.119.179.0/24',
+        '185.239.173.0/24',
+        '185.239.174.0/24'
+        // '10.0.0.0/8',
+        // '10.1.0.0/16',
+        // '10.1.1.0/24'
+    ];
+    
+    if (!ipInMultipleSubnets($connection->getRemoteIp(), $subnet_ranges)) {
+        $connection->close();
+    }
     $connection->stage = STAGE_INIT;
     $connection->auth_type = NULL;
 };
