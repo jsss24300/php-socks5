@@ -13,7 +13,6 @@
  * @license http://www.opensource.org/licenses/mit-license.php MIT License
  */
 ini_set("memory_limit", "512M");
-
 use \Workerman\Worker;
 use \Workerman\Timer;
 use \Workerman\Connection\AsyncTcpConnection;
