@@ -9,7 +9,7 @@ git fetch
 # 判断是否有变更
 if [ $(git rev-parse HEAD) != $(git rev-parse @{u}) ]; then
     echo "发现变更，正在更新文件..."
-    git pull origin main  # 根据你的主分支名称调整
+    git pull  # 根据你的主分支名称调整
 else
     echo "没有发现变更。"
 fi
