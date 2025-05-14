@@ -10,6 +10,12 @@ git fetch
 if [ $(git rev-parse HEAD) != $(git rev-parse @{u}) ]; then
     echo "发现变更，正在更新文件..."
     git pull  # 根据你的主分支名称调整
+	
+	php start.php stop
+	
+	php start.php start -d
+
+	
 else
     echo "没有发现变更。"
 fi
